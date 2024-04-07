@@ -1,79 +1,78 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# PhonePe SDK Demo
 
-# Getting Started
+### Development Steps for payment
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+Init Method (Initialization of SDK)
+here environmentsForSDK are SANDBOX, PRODUCTION
+appId is salt key
 
-## Step 1: Start the Metro Server
-
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
-
-To start Metro, run the following command from the _root_ of your React Native project:
-
-```bash
-# using npm
-npm start
-
-# OR using Yarn
-yarn start
+```sh
+ PhonePePaymentSDK.init(environmentForSDK,merchantId,appId,isDebuggingEnabled)
+    .then(result => {// handle promise})
 ```
 
-## Step 2: Start your Application
+transactionContext is base64encoded cart details which will be unique for each merchant.
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
-
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
+```sh
+{
+	"orderContext": {
+		"trackingInfo": {
+			"type": "HTTPS",
+			"url": "https://google.com"
+		}
+	},
+	"fareDetails": {
+		"totalAmount": 3900,
+		"payableAmount": 3900
+	},
+	"cartDetails": {
+		"cartItems": [{
+			"category": "SHOPPING",
+			"itemId": "1234567890",
+			"price": 3900,
+			"itemName": "TEST",
+			"quantity": 1
+		}]
+	}
+}
 ```
 
-### For iOS
+The base 64 encoded value will be :
 
-```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
+```sh
+ewoJIm9yZGVyQ29udGV4dCI6IHsKCQkidHJhY2tpbmdJbmZvIjogewoJCQkidHlwZSI6ICJIVFRQUyIsCgkJCSJ1cmwiOiAiaHR0cHM6Ly9nb29nbGUuY29tIgoJCX0KCX0sCgkiZmFyZURldGFpbHMiOiB7CgkJInRvdGFsQW1vdW50IjogMzkwMCwKCQkicGF5YWJsZUFtb3VudCI6IDM5MDAKCX0sCgkiY2FydERldGFpbHMiOiB7CgkJImNhcnRJdGVtcyI6IFt7CgkJCSJjYXRlZ29yeSI6ICJTSE9QUElORyIsCgkJCSJpdGVtSWQiOiAiMTIzNDU2Nzg5MCIsCgkJCSJwcmljZSI6IDM5MDAsCgkJCSJpdGVtTmFtZSI6ICJURVNUIiwKCQkJInF1YW50aXR5IjogMQoJCX1dCgl9Cn0=
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+Base64 encode request body. The body contains the parameters as given below
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+```sh
+{
+      merchantId: 'PGTESTPAYUAT',
+      merchantTransactionId: 'MMT',
+      amount: 100, //in paisa
+      callbackUrl: 'https://webhook.site/callback-url',
+      mobileNumber: '9999999999',
+      paymentInstrument: {
+        type: 'PAY_PAGE',
+      },
+}
+```
 
-## Step 3: Modifying your App
+after converting it to base64 we can send it as requestBody
 
-Now that you have successfully run the app, let's modify it.
+Calculate X-Verify / checkSum
+SHA256(base64 encoded payload + "/v3/transaction/sdk-less/initiate" + salt key) + '###' + salt index
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+Start Transaction API
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+```sh
+PhonePePaymentSDK.startTransaction(body, checkSum, packageName, appSchema)
+    .then( a => { console.log(a) })
+```
 
-## Congratulations! :tada:
+## Imortant Links
 
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+PhonePe React Native SDK [link](https://developer.phonepe.com/v1/docs/react-native-sdk-integration-standard/)
+PhonePe Payment Flow [link](https://developer.phonepe.com/v4/docs/step/)
+PhonePe PayApi [link](https://developer.phonepe.com/v1/reference/pay-api-1/)
+PhonePe UAT Testing [link](https://developer.phonepe.com/v1/docs/uat-testing/)

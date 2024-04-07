@@ -13,7 +13,14 @@
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
-
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+  NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+  [userInfo setObject:options forKey:@"options"];
+  [userInfo setObject:url forKey:@"openUrl"];
+  [[NSNotificationCenter defaultCenter] postNotificationName: @"ApplicationOpenURLNotification" object:nil userInfo:userInfo];
+  return YES;
+}
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {
   return [self getBundleURL];
