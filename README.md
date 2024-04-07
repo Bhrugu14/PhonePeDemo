@@ -70,9 +70,9 @@ PhonePePaymentSDK.startTransaction(body, checkSum, packageName, appSchema)
     .then( a => { console.log(a) })
 ```
 
-## Imortant Links
+##### Important Links
 
-PhonePe React Native SDK [link](https://developer.phonepe.com/v1/docs/react-native-sdk-integration-standard/)
-PhonePe Payment Flow [link](https://developer.phonepe.com/v4/docs/step/)
-PhonePe PayApi [link](https://developer.phonepe.com/v1/reference/pay-api-1/)
-PhonePe UAT Testing [link](https://developer.phonepe.com/v1/docs/uat-testing/)
+- PhonePe React Native SDK [link](https://developer.phonepe.com/v1/docs/react-native-sdk-integration-standard/)
+- PhonePe Payment Flow [link](https://developer.phonepe.com/v4/docs/step/)
+- PhonePe PayApi [link](https://developer.phonepe.com/v1/reference/pay-api-1/)
+- PhonePe UAT Testing [link](https://developer.phonepe.com/v1/docs/uat-testing/)
